@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Comments Service</title>
+    <link rel="stylesheet" href="../static/css/index.css"> 
+    
+<link rel='preconnect' href='https://fonts.googleapis.com'>
+<link href='https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="../static/images/cloudsek_security-threat-intelligence-services_1616565025665.png" alt="Logo"> 
+            <h1>POSTVERSE</h1>
+        </div>
+    
+        <nav>
+            {% if user %}
+            
+    <span style="font-size: 24px; font-weight: bold;color: black;">Welcome, {{ user.name }}</span>
+{% endif %} 
+
+        </nav>
+    </header>
+    <marquee behavior="scroll" direction="left">Hi {{ user.name }}, welcome to Postverse by CloudSEK. Dive into the community and express yourself by creating your very first post!</marquee>
+
+    <div class="pos">
+    <main id="post-list">
+        <!-- Existing posts will be dynamically added here -->
+        {% for post in posts %}
+        <div class="post" data-post-id="{{ post._id }}">
+            <h2>{{ post.title }}</h2>
+            <p>posted by {{ post.username }}</p> <!-- Display the username -->
+            <p>{{ post.content }}</p>
+            <span class="timestamp">{{ post.timestamp }}</span> <!-- Display the timestamp -->
+            <hr> <!-- Horizontal line separating post and comments -->
+            
+            <ul class="comments">
+                <!-- Comments will be dynamically added here -->
+                {% for comment in post.comments %}
+                <li>
+                    <div class="comment">
+                        <span><strong>{{ comment.username }}:</strong> {{ comment.content }}</span>
+
+                         <!-- Display the username for the comment -->
+                        <span class="comment-timestamp"> {{ comment.timestamp }}</span> <!-- Display the timestamp for the comment -->
+                    </div>
+                    <!-- Nested comments -->
+                    <ul class="nested-comments">
+                        <!-- Nested comments will be dynamically added here -->
+                        {% for nested_comment in comment.nested_comments %}
+                        <li>
+                            <div class="comment">
+                                <strong>{{ nested_comment.username }}</strong> <!-- Display the username for the nested comment -->
+                                <span>{{ nested_comment.content }}</span> <!-- Display the nested comment content -->
+                                <span class="comment-timestamp">{{ nested_comment.timestamp }}</span> <!-- Display the timestamp for the nested comment -->
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="com">
+            <form class="comment-form">
+                <input type="text" class="comment-input" placeholder="Add a comment">
+                <br>
+                <button type="submit" class="comment-btn">Comment</button>
+             <!-- Changed to type="submit" -->
+            </form>
+            </div>
+        </div>
+        {% endfor %}
+    
+    </main>
+    <section id="create_post">
+        <h2>Create your Post</h2>
+        <form id="post-form" class="formpost">
+            <input type="hidden" id="post-username" name="username" value="{{ user.name }}"> <!-- Add a hidden input field for username -->
+            <input type="text" id="post-title" name="title" placeholder="Title" required>
+            <textarea id="post-content" name="content" placeholder="Write your post..." required row="17"style="height: 325px; width: 366px;"></textarea>
+
+            <button type="submit" class="submitbutton">Submit</button>
+        </form>
+    </section>
+</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // AJAX request to create a post
+            document.getElementById('post-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const title = document.getElementById('post-title').value.trim();
+                const content = document.getElementById('post-content').value.trim();
+                const username = document.getElementById('post-username').value.trim(); // Get username from hidden input field
+                const timestamp = new Date().toLocaleString(); // Get current date and time
+
+                if (title !== '' && content !== '') {
+                    createPost(title, content, username, timestamp); // Pass username and timestamp
+                    document.getElementById('post-form').reset();
+                } else {
+                    alert('Title and content are required!');
+                }
+            });
+
+            // AJAX request to add a comment
+            document.querySelectorAll('.comment-form').forEach(form => {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    const postId = this.closest('.post').getAttribute('data-post-id');
+                    const commentInput = this.querySelector('.comment-input');
+                    const commentText = commentInput.value.trim();
+                    const username = document.getElementById('post-username').value.trim(); // Get username from hidden input field
+                    const timestamp = new Date().toLocaleString(); // Get current date and time
+
+                    if (commentText !== '') {
+                        addComment(postId, commentText, username, timestamp); // Pass username and timestamp
+                        commentInput.value = '';
+                    } else {
+                        alert('Please enter a comment!');
+                    }
+                });
+            });
+
+            // Function to create a post
+            // Function to create a post
+function createPost(title, content, username, timestamp) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/create_post', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const post = JSON.parse(xhr.responseText);
+                addPost(post);
+                // Reload the page after creating a post
+                window.location.reload();
+            } else {
+                console.error('Error:', xhr.statusText);
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ title: title, content: content, username: username, timestamp: timestamp }));
+}
+
+
+            // Function to add a new post to the page
+            function addPost(post) {
+                // Same as before
+                const postList = document.getElementById('post-list');
+                const div = document.createElement('div');
+                div.classList.add('post');
+                div.setAttribute('data-post-id', post._id);
+                div.innerHTML = `
+                    <h2>${post.username}</h2> <!-- Display the username -->
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                    <span class="timestamp">${post.timestamp}</span> <!-- Display the timestamp -->
+                    <ul class="comments"></ul>
+                    <form class="comment-form">
+                        <input type="text" class="comment-input" placeholder="Add a comment">
+                        <button type="button" class="comment-btn">Comment</button>
+                    </form>`;
+                postList.prepend(div);
+            }
+
+            // Function to add a comment to a post
+            function addComment(postId, commentText, username, timestamp) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/add_comment/' + postId, true); 
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.status === 'success') {
+                                addCommentToPost(postId, commentText, username, timestamp);
+                               
+                                window.location.reload();
+                            } else {
+                                console.error('Error:', response.message);
+                            }
+                        } else {
+                            console.error('Error:', xhr.statusText);
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({ comment: commentText, username: username, timestamp: timestamp }));
+            }
+
+            // Function to add a comment to the post displayed on the page
+            function addCommentToPost(postId, commentText, username, timestamp) {
+                const commentList = document.querySelector(`.post[data-post-id="${postId}"] .comments`);
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>${username}</strong> <!-- Display the username for the comment -->
+                    <span>${commentText}</span> <!-- Display the comment content -->
+                    <span class="comment-timestamp">${timestamp}</span> <!-- Display the timestamp for the comment -->`;
+                commentList.appendChild(li);
+            }
+        });
+    </script>
+</body>
+</html>

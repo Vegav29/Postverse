@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign In</title>
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'fonts/material-icon/css/material-design-iconic-font.min.css') }}">
+    <!-- Main css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <link rel='preconnect' href='https://fonts.googleapis.com'>
+<link href='https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap' rel='stylesheet' type='text/css'>
+    <header>
+        <div class="logo">
+            <img src="../static/images/cloudsek_security-threat-intelligence-services_1616565025665.png" alt="Logo"> 
+            <h1>POSTVERSE</h1>
+        </div>
+    </header>
+</head>
+
+<body>
+    <div class="main">
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure><img src="{{ url_for('static', filename= 'images/signin-image.jpg') }}" alt="sing up image"></figure>
+                    </div>
+                    <div class="signin-form">
+                        <h2 class="form-title">Sign In</h2>
+                        <div style="margin-bottom:10px">
+                            <label class="label-agree-term error_message" style="color: red;display: none;"></label>
+                        </div>
+                        <form action="/signin" method="POST" class="register-form" id="login-form">
+                            <div class="form-group">
+                                <label for="your_email"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="email" id="email" placeholder="Email" />
+                            </div>
+                            <div class="form-group">
+                                <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="pass" id="pass" placeholder="Password" />
+                            </div>
+                            <div class="form-button">
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in" />
+                            </div>
+                        </form>
+                        <div class="social-login">
+                            <a href="/signup" class="signup-image-link">Create an account</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- JS -->
+    <script src="{{ url_for('static', filename= 'vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#login-form').submit(function (event) {
+                event.preventDefault(); // Prevent form from submitting normally
+
+                var email = $('#email').val();
+                var password = $('#pass').val();
+
+                if (email.trim() === '' || password.trim() === '') {
+                    $(".error_message").text("All fields are required.");
+                    $(".error_message").show(0).delay(3000).hide(0);
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/signin',
+                        data: $(this).serialize(),
+                        success: function (response) {
+                            if (response.status) {
+                                window.location.href = '/index/' + response.user_id;
+                            } else {
+                                $(".error_message").text("Incorrect Email and Password.");
+                                $(".error_message").show(0).delay(3000).hide(0);
+                            }
+                        },
+                        dataType: 'json'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

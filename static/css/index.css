@@ -1,0 +1,141 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+body {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    font-family: Arial, sans-serif; /* Specify font family */
+    background-image: url('../images/v1064-36.jpg'); /* Background image */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the background image */
+    background-attachment: fixed;
+}
+*{font-family: 'Poppins', sans-serif;}
+
+/* CSS for Top Navigation Bar */
+header {
+    background-color:burlywood; /* Brown color for navigation bar */
+    color: #fff; /* Text color */
+    padding: 10px 20px; /* Padding */
+    display: flex; /* Flex layout */
+    justify-content: space-between; /* Align items with space between */
+    align-items: center; /* Center items vertically */
+}
+
+.logo img {
+    height: 100px; /* Set the height of the logo */
+    width: auto; /* Maintain aspect ratio */
+}
+nav #h1{
+    position:left;
+}
+nav a {
+    color: #fff; /* Link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold font */
+    margin-left: 20px; /* Add margin to separate links */
+}
+
+nav a:hover {
+    text-decoration: underline; /* Underline links on hover */
+}
+
+/* CSS for Main Content Area */
+
+#post-list {
+    width: 75%; /* 75% of the viewport width minus 20px */
+    margin: 20px 20px 20px 0; /* Add margin on top, right, and bottom, leave 0 margin on the left */
+    padding: 20px; /* Add padding */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Drop shadow */
+     /* Float the section to the left */
+}
+.post {
+    margin-bottom: 30px; /* Add margin between posts */
+}
+
+.timestamp {
+    color: #666; /* Timestamp color */
+}
+
+.comments {
+    list-style-type: none; /* Remove bullets */
+    padding: 0; /* Remove default padding */
+}
+
+.comments li {
+    margin-bottom: 10px; /* Add margin between comments */
+}
+
+.comment-timestamp {
+    color: #888; /* Comment timestamp color */
+}
+
+/* CSS for Create Post Section */
+#create_post {
+    width: 25%;/* 25% of the viewport width minus 20px */
+    margin: 20px 0 20px 20px; /* Add margin on top, bottom, and right, leave 0 margin on the left */
+    padding: 20px; /* Add padding */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Drop shadow */
+     /* Float the section to the right */
+    height: 500px;
+    margin-left: 20px;
+
+}
+#post-list{
+    float: relative;
+}
+/* CSS for Comment Form */
+.comment-form {
+    margin-top: 20px;
+    display:flex; /* Add margin at the top */
+}
+
+.comment-input {
+    width: calc(100% - 90px); /* Adjust width of input */
+    padding: 5px; /* Add padding */
+    margin-right: 10px; /* Add margin to the right */
+    box-shadow: -2px 1px 10px 0px black;
+    border: none;
+}
+
+.comment-btn {
+    padding: 5px 10px; /* Add padding */
+    padding top: ;: 5px; /* Add padding */
+    background-color:burlywood; /* Background color */
+    color: #fff; /* Text color */
+    border-radius: 10px; /* Rounded corners */
+    border: none; /* Remove border */
+    cursor: pointer; /* Change cursor to pointer */
+    box-shadow: -2px 1px 10px 0px black;
+    
+   
+}
+
+.comment-btn:hover {
+    background-color: #555; /* Darker background color on hover */
+}
+.pos{display: flex;
+    padding: 0px 20px;}
+
+.logo{
+display: flex;
+align-items: center;
+}
+.com{display:flex;}
+.submitbutton{
+    width: fit-content;
+    height: 30px;
+    border: none;
+    background-color: green;
+    color: white;
+    border-radius: 12px;
+    box-shadow: -2px 1px 10px 0px black;
+}
+.formpost{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
